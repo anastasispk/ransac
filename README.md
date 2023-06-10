@@ -9,6 +9,7 @@
 In order to test the RANSAC implementation, you need to have a docker setup. Inside this directory run the following commands:
 
 ```
+mkdir build
 docker build . -t ransac
 docker run --rm -v "$PWD"/img:/ntua_assignment/img ransac
 ```
