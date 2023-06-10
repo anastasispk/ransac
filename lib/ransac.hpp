@@ -1,11 +1,25 @@
-// Define a linear model as y = mx + c
+/**
+ * @brief Define a linear model as y = ax + b
+ * 
+ * @param a Slope
+ * @param b Intercept
+ */
 struct LinearModel {
-    double m;  // Slope
-    double c;  // Intercept
+    double a;
+    double b;
 };
 
+/**
+ * @brief Construct a new RANSAC object
+ * 
+ * @param threshold Distance threshold for inliers
+ * @param maxIterations Maximum number of RANSAC iterations
+ * @param sampleSize Number of points to sample for fitting the model
+ * @param minInliers Minimum number of inliers required for a successful fit
+ */
 class RANSAC {
 public:
+
     RANSAC(double threshold, int maxIterations, int sampleSize, int minInliers)
         : threshold_(threshold),
           maxIterations_(maxIterations),
@@ -45,7 +59,7 @@ public:
             }
         }
 
-        std::cout << "Best model: m = " << bestModel.m << ", c = " << bestModel.c << std::endl;
+        std::cout << "Best model: a = " << bestModel.a << ", b = " << bestModel.b << std::endl;
         std::cout << "Inlier count: " << bestInlierCount << std::endl;
 
         return bestModel;
@@ -84,17 +98,25 @@ private:
             return LinearModel();
         }
 
-        double m = (n * sumXY - sumX * sumY) / denominator;
-        double c = (sumY - m * sumX) / n;
+        double a = (n * sumXY - sumX * sumY) / denominator;
+        double b = (sumY - a * sumX) / n;
 
-        return { m, c };
+        return { a, b };
     }
 
+    /**
+     * @brief Count the number of inliers during ransac
+     * 
+     * @param x 
+     * @param y 
+     * @param model 
+     * @return int number of inliers
+     */
     int countInliers(const std::vector<double>& x, const std::vector<double>& y, const LinearModel& model) {
         int inlierCount = 0;
 
         for (int i = 0; i < x.size(); ++i) {
-            double predictedY = model.m * x[i] + model.c;
+            double predictedY = model.a * x[i] + model.b;
             double error = std::abs(predictedY - y[i]);
 
             if (error < threshold_) {

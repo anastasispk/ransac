@@ -14,12 +14,19 @@ LinearModel solver(std::vector<double> x, std::vector<double> y, double threshol
     return ransac.fit(x,y);
 }
 
+/**
+ * @brief Visualize the data and the fitted model and export to a plot image
+ * 
+ * @param x 
+ * @param y 
+ * @param model 
+ */
 void visualize(std::vector<double> x, std::vector<double> y, LinearModel model){
-    // Visualize the data and the fitted model
-    plt::plot(x, y, "ko");  // Data points
+    plt::title("Ransac model visualization");
+    plt::plot(x, y, "bo");  // Data points
     std::vector<double> fittedY(x.size());
     for (int i = 0; i < x.size(); ++i) {
-        fittedY[i] = model.m * x[i] + model.c;
+        fittedY[i] = model.a * x[i] + model.b;
     }
     plt::plot(x, fittedY, "r-");  // Fitted line
     plt::save("../img/plot.png");
@@ -27,10 +34,14 @@ void visualize(std::vector<double> x, std::vector<double> y, LinearModel model){
 
 int main() {
 
+    // Set line parameters
+
     double slope = 3; 
     double intercept = 10;
     double distance = 50;
     int dataPoints = 100;
+
+    // Set ransac parameters
 
     double threshold = 5.0;
     int maxIterations = 1000;
@@ -41,8 +52,6 @@ int main() {
     std::vector<double> x(dataPoints) ;
     std::iota (std::begin(x), std::end(x), 0);
     std::vector<double> y = dataGenerator.generateData(dataPoints);
-
-    std::cout << x.size() << " " << y.size() << std::endl;
 
     LinearModel model = solver(x, y, threshold, maxIterations, sampleSize, dataPoints);
 
