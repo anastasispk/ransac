@@ -12,3 +12,7 @@ In order to test the RANSAC implementation, you need to have a docker setup. Ins
 docker build . -t ransac
 docker run --rm -v "$PWD"/img:/ntua_assignment/img ransac
 ```
+
+The terminal output is the slope and the intercept of the RANSAC line and the number of inliers. Inside the img folder you can find the plot that shows the fitting.
+
+![RANSAC](./img/plot.png)
